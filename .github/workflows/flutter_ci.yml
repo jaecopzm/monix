@@ -10,27 +10,39 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Flutter SDK
+      - name: Detect Dart SDK & choose Flutter
         run: |
           set -e
-          FLUTTER_VERSION="3.38.1"  # latest stable release
+
+          SDK_LINE=$(grep -E 'sdk:\s*\^?[0-9]+\.[0-9]+\.[0-9]+' pubspec.yaml)
+          DART_VERSION=$(echo "$SDK_LINE" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+
+          echo "Detected Dart SDK constraint: $DART_VERSION"
+
+          # Minimal Dart → Flutter mapping
+          if [[ "$DART_VERSION" == 3.10.* ]]; then
+            FLUTTER_VERSION="3.38.9"
+          else
+            echo "Unsupported Dart version: $DART_VERSION"
+            exit 1
+          fi
+
+          echo "FLUTTER_VERSION=$FLUTTER_VERSION" >> $GITHUB_ENV
+
+      - name: Install Flutter
+        run: |
+          set -e
           FLUTTER_DIR="$HOME/flutter"
 
-          echo "Installing Flutter SDK ${FLUTTER_VERSION}"
-          rm -rf "$FLUTTER_DIR"
-          git clone https://github.com/flutter/flutter.git --depth 1 -b "${FLUTTER_VERSION}" "$FLUTTER_DIR"
+          git clone https://github.com/flutter/flutter.git \
+            --depth 1 -b "$FLUTTER_VERSION" "$FLUTTER_DIR"
 
           export PATH="$FLUTTER_DIR/bin:$FLUTTER_DIR/bin/cache/dart-sdk/bin:$PATH"
           echo "$FLUTTER_DIR/bin" >> $GITHUB_PATH
           echo "$FLUTTER_DIR/bin/cache/dart-sdk/bin" >> $GITHUB_PATH
 
           flutter --version
-
-      - name: Cache Pub packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.pub-cache
-          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
+          dart --version
 
       - name: Install dependencies
         run: flutter pub get
