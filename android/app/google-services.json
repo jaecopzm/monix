@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "899451446208",
+    "project_id": "monix-zm",
+    "storage_bucket": "monix-zm.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:899451446208:android:33f73ebc361aaed5469e25",
+        "android_client_info": {
+          "package_name": "com.example.monixx"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqr96x7SQ0hIFlTomFONONl9o3JZU8jKA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,68 @@
+name: monixx
+description: "Beautiful offline financial tracker and money management tool"
+publish_to: 'none'
+version: 1.1.0
+
+environment:
+  sdk: ^3.10.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+  sqflite: ^2.3.0
+  intl: ^0.19.0
+  fl_chart: ^0.68.0
+  shared_preferences: ^2.2.2
+  google_fonts: ^6.1.0
+  flutter_animate: ^4.5.0
+  flutter_staggered_grid_view: ^0.7.0
+  path: ^1.8.3
+  csv: ^6.0.0
+  path_provider: ^2.1.5
+  share_plus: ^12.0.1
+  local_auth: ^2.3.0
+  flutter_secure_storage: ^9.2.2
+  firebase_core: ^3.1.0
+  firebase_auth: ^5.1.0
+  cloud_firestore: ^5.0.1
+  google_sign_in: ^6.2.1
+  provider: ^6.1.2
+  flutter_svg: ^2.0.10+1
+  pdf: ^3.11.1
+  printing: ^5.13.4
+  flutter_local_notifications: ^18.0.1
+  timezone: ^0.9.4
+  firebase_ai: ^2.3.0
+  home_widget: ^0.6.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.3
+  flutter_native_splash: ^2.4.1
+  sqflite_common_ffi: ^2.3.0
+  mocktail: ^1.0.0
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/monixx-icon.png"
+  adaptive_icon_background: "#6C63FF"
+  adaptive_icon_foreground: "assets/icons/monixx-icon.png"
+
+flutter_native_splash:
+  color: "#6C63FF"
+  image: assets/icons/monixx-icon.png
+  android: true
+  ios: true
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/icons/
+    - assets/icons/categories/
+    - assets/icons/categories/expense/
+    - assets/icons/categories/income/
+    - assets/icons/categories/subscriptions/
+    - assets/svgs/
