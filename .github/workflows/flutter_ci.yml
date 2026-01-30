@@ -8,51 +8,32 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Determine Flutter version from pubspec
-        id: get_version
-        run: |
-          ver=$(grep -E '^\s*flutter_version\s*:' pubspec.yaml | sed -E "s/^[[:space:]]*flutter_version\s*:\s*['\"]?([^'\" ]+)['\"]?.*/\1/" || true)
-          if [ -z "$ver" ]; then
-            ver=$(grep -E '^\s*flutter-version\s*:' pubspec.yaml | sed -E "s/^[[:space:]]*flutter-version\s*:\s*['\"]?([^'\" ]+)['\"]?.*/\1/" || true)
-          fi
-          if [ -z "$ver" ]; then
-            echo "No explicit flutter version in pubspec.yaml, falling back to 'stable' channel"
-            ver=stable
-          fi
-          echo "FLUTTER_VERSION=$ver" >> $GITHUB_ENV
-
-      - name: Install Flutter SDK (git clone)
+      - name: Install Flutter SDK
         run: |
           set -e
+          FLUTTER_VERSION="3.38.1"  # latest stable release
           FLUTTER_DIR="$HOME/flutter"
-          echo "Installing Flutter: ${FLUTTER_VERSION} into $FLUTTER_DIR"
+
+          echo "Installing Flutter SDK ${FLUTTER_VERSION}"
           rm -rf "$FLUTTER_DIR"
           git clone https://github.com/flutter/flutter.git --depth 1 -b "${FLUTTER_VERSION}" "$FLUTTER_DIR"
+
+          export PATH="$FLUTTER_DIR/bin:$FLUTTER_DIR/bin/cache/dart-sdk/bin:$PATH"
           echo "$FLUTTER_DIR/bin" >> $GITHUB_PATH
           echo "$FLUTTER_DIR/bin/cache/dart-sdk/bin" >> $GITHUB_PATH
+
           flutter --version
 
       - name: Cache Pub packages
         uses: actions/cache@v4
         with:
-          path: |
-            ~/.pub-cache
-            ~/.pub-cache/bin
-          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.yaml','**/pubspec.lock') }}
-
-      - name: Cache Gradle
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/android/build.gradle**','**/gradle/wrapper/gradle-wrapper.properties') }}
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
 
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Build APK (release)
+      - name: Build APK
         run: flutter build apk --release
