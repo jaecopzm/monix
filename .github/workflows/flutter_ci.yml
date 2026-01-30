@@ -24,10 +24,16 @@ jobs:
           fi
           echo "FLUTTER_VERSION=$ver" >> $GITHUB_ENV
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
+      - name: Install Flutter SDK (git clone)
+        run: |
+          set -e
+          FLUTTER_DIR="$HOME/flutter"
+          echo "Installing Flutter: ${FLUTTER_VERSION} into $FLUTTER_DIR"
+          rm -rf "$FLUTTER_DIR"
+          git clone https://github.com/flutter/flutter.git --depth 1 -b "${FLUTTER_VERSION}" "$FLUTTER_DIR"
+          echo "$FLUTTER_DIR/bin" >> $GITHUB_PATH
+          echo "$FLUTTER_DIR/bin/cache/dart-sdk/bin" >> $GITHUB_PATH
+          flutter --version
 
       - name: Cache Pub packages
         uses: actions/cache@v4
